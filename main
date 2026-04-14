@@ -1,0 +1,38 @@
+import pyautogui as p
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from webdriver_manager.chrome import ChromeDriverManager
+import time
+
+# --- PARTE 1: SELENIUM (Abre o navegador de forma controlável) ---
+# Em vez de p.press('win'), deixamos o Selenium abrir o Chrome
+service = Service(ChromeDriverManager().install())
+driver = webdriver.Chrome(service=service)
+
+driver.maximize_window()
+driver.get('https://www.amazon.com.br')
+
+# Espera um pouco para o site carregar
+time.sleep(2)
+
+# --- PARTE 2: SELENIUM + PYAUTOGUI ---
+try:
+    barra_pesquisa = driver.find_element(By.ID, "twotabsearchtextbox")
+    
+    x = barra_pesquisa.location['x']
+    y = barra_pesquisa.location['y']
+
+    barra_pesquisa.click()
+    
+    time.sleep(1)
+    p.write('galaxy s25', interval=0.1)
+    p.press('enter')
+    
+
+except Exception as e:
+    print(f"Houve um erro ao localizar a barra: {e}")
+
+# Pausa para você ver o resultado antes de fechar
+time.sleep(5)
+driver.quit()
