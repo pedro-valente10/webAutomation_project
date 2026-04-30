@@ -11,12 +11,12 @@ barra_pesquisa.click()
 barra_pesquisa.send_keys("Galaxy S25")
 barra_pesquisa.send_keys(Keys.ENTER)
 time.sleep(2)
-xpath_s25 = "//span[contains(text(), 'Samsung Galaxy S25') and not(contains(text(), 'FE'))]/.."
-anuncio1 = wait.until(EC.element_to_be_clickable((By.XPATH, xpath_s25)))
+# Localiza o container do produto pelo ASIN e clica no link
+produto1 = navegador.find_element("css selector", f'div[data-asin="B0DSY665M3"] a.a-link-normal')
 
 navegador.execute_script("arguments[0].scrollIntoView({block: 'center'})",
-                         anuncio1)
-anuncio1.click()
+                         produto1)
+produto1.click()
 
 
 time.sleep(10)
