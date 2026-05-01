@@ -48,9 +48,6 @@ Para que o envio de e-mail funcione, você deve configurar suas próprias creden
    python nome_do_seu_arquivo.py
    ```
 
-## 📄 Licença
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para detalhes.
-
 ---
 Feito por [Pedro Valente](https://github.com/pedro-valente10)
 
