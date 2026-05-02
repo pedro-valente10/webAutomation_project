@@ -96,7 +96,7 @@ service = build('gmail', 'v1', credentials=creds)
 email = criar_email(
     "me",
     "pedrohenriquepvalente@gmail.com",
-    "Preço do produto 1",
+    "Preço do seu produto",
     f"""Bom dia, Pedro! Abaixo seguem as informações mais recentes do anúncio do seu próximo celular:\n
     Nome: {nome_produto1}
     {flags_produto1}
