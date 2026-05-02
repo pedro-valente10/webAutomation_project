@@ -61,6 +61,7 @@ def flags(preco_produto):
     else:
         return "Bandeira vermelha 🔴"
 
+
 #busca usando o selenium
 navegador = webdriver.Chrome()
 time.sleep(2)
