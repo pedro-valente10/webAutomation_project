@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 import time
+import re
 
 import os
 import base64
@@ -43,6 +44,23 @@ def criar_email(remetente, destinatario, assunto, mensagem):
 def enviar_email(service, mensagem):
     return service.users().messages().send(userId="me", body=mensagem).execute()
 
+def flags(preco_produto):
+
+    numeros = re.findall(r'\d+(?:[.,]\d+)*', preco_produto)
+    if len(numeros) < 2:
+        return "Erro: Formato de texto não reconhecido"
+    
+    parcelas = int(numeros[0])
+    valor_parcela = float(numeros[1].replace('.', '').replace(',', '.'))
+    valor_final = parcelas * valor_parcela
+
+    if valor_final < 3500:
+        return "Bandeira verde 🟢"
+    elif valor_final < 4000:
+        return "Bandeira amarela 🟡"
+    else:
+        return "Bandeira vermelha 🔴"
+
 #busca usando o selenium
 navegador = webdriver.Chrome()
 time.sleep(2)
@@ -60,12 +78,16 @@ produto1 = navegador.find_element("css selector", f'div[data-asin="B0DSY665M3"] 
 navegador.execute_script("arguments[0].scrollIntoView({block: 'center'})", produto1)
 produto1.click()
 
-time.sleep(10)
+time.sleep(5)
 nome_produto1 =  navegador.title
 precoInt_produto1 = navegador.find_element("class name", "a-price-whole").text
 precoFloat_produto1 = navegador.find_element("class name", "a-price-fraction").text
+precoParcelado_produto1 = navegador.find_element("css selector", ".a-size-base.a-text-bold").text
+flags_produto1 = flags(precoParcelado_produto1)
 print(f"Nome - {nome_produto1}")
-print(f"Preço - R$ {precoInt_produto1},{precoFloat_produto1}")
+print(f"Preço à vista - R$ {precoInt_produto1},{precoFloat_produto1}")
+print(f"Preço parcelado - {precoParcelado_produto1}")
+print(f"{flags_produto1}")
 
 #cria e manda o email
 creds = autenticar()
@@ -75,8 +97,11 @@ email = criar_email(
     "me",
     "pedrohenriquepvalente@gmail.com",
     "Preço do produto 1",
-    f"Nome: {nome_produto1}\nPreço: R$ {precoInt_produto1},{precoFloat_produto1}"
-)
+    f"""Bom dia, Pedro! Abaixo seguem as informações mais recentes do anúncio do seu próximo celular:\n
+    Nome: {nome_produto1}
+    {flags_produto1}
+    Preço à vista: R$ {precoInt_produto1},{precoFloat_produto1}
+    {precoParcelado_produto1}""")
 
 enviar_email(service, email)
 
